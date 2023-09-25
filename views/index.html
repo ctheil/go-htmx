@@ -9,9 +9,25 @@
     ></script>
     <title id="title">HTMX and GO</title>
   </head>
-  <body>
+  <style>
+    .table {
+        border: solid 1px black;
+    }
+    .table td, .table th {
+        padding: 0.3rem 0.5rem;
+    }
+  </style>
+  <body hx-get="/todos" hx-trigger="load" hx-swap="innerHTML" hx-target=".todos">
     <h2 id="heading">ToDo:</h2>
     <ul class="list"></ul>
+    <table class="table">
+            <th>Completed</th>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Options</th>
+        </th>
+        <tbody class="todos"></tbody>
+     </table>
       Add to todos
     </button>
     <input
@@ -26,7 +42,7 @@
     />
     <img id="indicator" class="htmx-indicator" src="/tail-spin.svg" />
     <div id="search-results"></div>
-    <form hx-post="/todo" hx-swap="beforeend" hx-target=".list" >
+    <form hx-post="/todo" hx-swap="beforeend" hx-target=".todos">
       <input name="name" type="text" />
       <button id="submit" type="submit">Add Todo</button>
     </div>

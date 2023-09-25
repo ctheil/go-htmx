@@ -9,15 +9,33 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-func formatSuffix(out *string, num int) {
-	*out = "th"
-	if num == 1 {
-		*out = "st"
-	} else if num%2 == 0 {
-		*out = "nd"
-	} else if num%3 == 0 {
-		*out = "rd"
-	}
+
+func makeTodo(t Todo) string {
+			var checked string
+			if t.Complete {
+				checked = "checked"
+			} else {
+				checked = ""
+			}
+
+	tStr := fmt.Sprintf(`
+			<tr>
+				<td>
+					<input class="check" type="checkbox" role="switch" hx-put="/complete?id=%v" %v>
+				</td>
+				<td>%v</td>
+				<td>Today</td>
+				<td>Options</td>
+			</tr>
+			`, t.Id, checked, t.Name)
+			return tStr
+}
+func getTodo(id uuid.UUID, todos []Todo) (t Todo, idx int){
+		idx = slices.IndexFunc(todos, func(t Todo) bool { return t.Id == id })
+		return todos[idx], idx
+}
+func saveTodo(t Todo, idx int, tt []Todo) {
+	tt[idx] = t;
 }
 
 type Todo struct {
@@ -29,21 +47,17 @@ type Todo struct {
 func main() {
 	todos := []Todo{}
 
-	//r.HandleFunc("/", controller.Home).Methods("GET")
-	http.HandleFunc("/swap", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Made it to /home")
+	http.HandleFunc("/todos", func(w http.ResponseWriter, r *http.Request) {
+		var out string
+	for _, t := range todos {
+		tStr := makeTodo(t);
 
-		//fmt.Fprintf(w, "Hello, you've requested: %s\n", r.URL.Path)
-		if r.Method == "GET" {
-
-			fmt.Fprintf(w, "<p>GET</p>")
-		}
-		if r.Method == "POST" {
-
-			fmt.Fprintf(w, "<p>POST</p>")
-		}
-
+		out += tStr;
+	}
+	fmt.Println(out)
+	fmt.Fprintf(w, out)
 	})
+
 	http.HandleFunc("/todo", func(w http.ResponseWriter, r *http.Request) {
 		if err := r.ParseForm(); err != nil {
 			log.Fatal("No data to parse")
@@ -59,26 +73,8 @@ func main() {
 			var t = Todo{Name: name, Id: id, Complete: false}
 			todos = append(todos, t)
 
-			var numSuffix string
-			formatSuffix(&numSuffix, len(todos))
-
-			fmt.Println(t)
-			var checked string
-			if t.Complete {
-				checked = "checked"
-			} else {
-				checked = ""
-			}
-			fmt.Fprintf(w, `
-			<li>
-			<div class="todo-item">
-
-			<input class="check" type="checkbox" role="switch" hx-post="/complete?id=%v" %v>
-			%v%v Todo: %v
-			</div>
-			</li>
-			`, t.Id, checked, len(todos), numSuffix, t.Name)
-
+			tStr := makeTodo(t)
+		fmt.Fprintf(w, tStr)
 		}
 
 	})
@@ -88,23 +84,10 @@ func main() {
 		if err != nil {
 			log.Fatal("uuid parse error")
 		}
-		fmt.Println(id)
+		t, idx := getTodo(id, todos)
 
-		idx := slices.IndexFunc(todos, func(t Todo) bool { return t.Id == id })
-
-		t := todos[idx]
 		t.Complete = true
-
-		fmt.Println(t)
-		fmt.Fprintf(w, `
-		<li>
-			<div class="todo-item">
-
-			<input class="check" type="checkbox" role="switch" hx-post="/complete?id=%v" %v>
-			%v%v Todo: %v
-			</div>
-		</li>
-		`, id, "checked", idx, "", t.Name)
+		saveTodo(t,idx, todos)
 
 	})
 	http.HandleFunc("/search", func(w http.ResponseWriter, r *http.Request) {
@@ -113,7 +96,6 @@ func main() {
 		}
 
 		q := r.FormValue("q")
-		fmt.Println(q)
 		fmt.Fprintf(w, "<p>Result: %v</p>", q)
 
 	})
