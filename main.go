@@ -21,11 +21,13 @@ func makeTodo(t Todo) string {
 	tStr := fmt.Sprintf(`
 			<tr>
 				<td>
-					<input class="check" type="checkbox" role="switch" hx-put="/complete?id=%v" %v>
+					<input class="check" type="checkbox" hx-swap="none" hx-put="/complete?id=%v" %v>
 				</td>
 				<td>%v</td>
 				<td>Today</td>
-				<td>Options</td>
+				<td>
+					<button>Edit</button>
+				</td>
 			</tr>
 			`, t.Id, checked, t.Name)
 			return tStr
@@ -86,10 +88,11 @@ func main() {
 		}
 		t, idx := getTodo(id, todos)
 
-		t.Complete = true
+		t.Complete = !t.Complete
 		saveTodo(t,idx, todos)
-
+		return
 	})
+
 	http.HandleFunc("/search", func(w http.ResponseWriter, r *http.Request) {
 		if err := r.ParseForm(); err != nil {
 			log.Fatal("No data to parse")
