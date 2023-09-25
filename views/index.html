@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script
+      src="https://unpkg.com/htmx.org@1.9.6"
+      integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni"
+      crossorigin="anonymous"
+    ></script>
+    <title id="title">HTMX and GO</title>
+  </head>
+  <body>
+    <h2 id="heading">ToDo:</h2>
+    <ul class="list"></ul>
+      Add to todos
+    </button>
+    <input
+      name="q"
+      type="text"
+      hx-get="/search"
+      hx-trigger="keyup canged delay:500ms"
+      hx-target="#search-results"
+      hx-swap="beforeend"
+      placeholder="Search..."
+      hx-indicator="#indicator"
+    />
+    <img id="indicator" class="htmx-indicator" src="/tail-spin.svg" />
+    <div id="search-results"></div>
+    <form hx-post="/todo" hx-swap="beforeend" hx-target=".list" >
+      <input name="name" type="text" />
+      <button id="submit" type="submit">Add Todo</button>
+    </div>
+  </body>
+</html>
