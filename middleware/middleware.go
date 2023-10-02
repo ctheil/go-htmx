@@ -11,6 +11,20 @@ import (
 
 var UnauthorizedError = errors.New("Invalid username or password")
 
+//	func Authenticate(next http.Handler) http.Handler {
+//		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+//			c, err := r.Cookie("session_token")
+//			if err != nil {
+//				// handle error
+//				w.WriteHeader(http.StatusUnauthorized)
+//				return
+//			}
+//			sessionToken := c.Value
+//
+//
+//
+//		})
+//	}
 func Authorization(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var username string = r.URL.Query().Get("username")

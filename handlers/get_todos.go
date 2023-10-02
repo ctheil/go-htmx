@@ -1,11 +1,10 @@
 package handlers
 
 import (
-	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/ctheil/go-htmx/api"
-	"github.com/ctheil/go-htmx/tools"
 	"github.com/gorilla/schema"
 	log "github.com/sirupsen/logrus"
 )
@@ -13,42 +12,35 @@ import (
 func GetTodos(w http.ResponseWriter, r *http.Request) {
 	var params = api.TodosResponse{}
 	var decoder *schema.Decoder = schema.NewDecoder()
+	fmt.Println("/todos")
 
-	var err error
-	err = decoder.Decode(&params, r.URL.Query())
-
-	if err != nil {
+	if err := decoder.Decode(&params, r.URL.Query()); err != nil {
 		log.Error(err)
 		api.InternalErrorHandler(w)
 		return
 	}
 
-	var database *tools.DatabaseInterface
-	database, err = tools.NewDatabase()
+	// var database *tools.DatabaseInterface
+	// database, err = tools.NewDatabase()
 
-	if err != nil {
-		log.Error(err)
-		api.InternalErrorHandler(w)
-		return
-	}
-
-	var todoDetails *tools.TodoDetails
-	todoDetails = (*database).GetUserTodos(params.Username)
-	if todoDetails == nil {
-		log.Error(err)
-		api.InternalErrorHandler(w)
-	}
-
-	var response = api.TodosResponse{
-		Todos: (*todoDetails).Todos,
-		Code:  http.StatusOK,
-	}
-	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(response)
-	if err != nil {
-		log.Error(err)
-		api.InternalErrorHandler(w)
-		return
-	}
-
+	//
+	// var todoDetails *tools.TodoDetails
+	// todoDetails = (*database).GetUserTodos(params.Username)
+	// if todoDetails == nil {
+	// 	log.Error(err)
+	// 	api.InternalErrorHandler(w)
+	// }
+	//
+	// var response = api.TodosResponse{
+	// 	Todos: (*todoDetails).Todos,
+	// 	Code:  http.StatusOK,
+	// }
+	// w.Header().Set("Content-Type", "application/json")
+	// err = json.NewEncoder(w).Encode(response)
+	// if err != nil {
+	// 	log.Error(err)
+	// 	api.InternalErrorHandler(w)
+	// 	return
+	// }
+	//
 }

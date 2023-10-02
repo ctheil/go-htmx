@@ -1,0 +1,30 @@
+<!doctype html>
+<html class="text-grey-900 antialiased leading-tight" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://unpkg.com/htmx.org@1.9.6"
+      integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni"
+      crossorigin="anonymous"
+    ></script>
+    <title id="title">HTMX and GO</title>
+  </head>
+  <style>
+    .htmx-indicator {
+      display: none !important;
+    }
+    .htmx-request .my-indicator {
+      display: inline !important;
+    }
+    .htmx-request.my-indicator {
+      display: inline !important;
+    }
+  </style>
+  <body
+    class="min-h-screen bg-grey-100 dark:bg-slate-900 container mx-auto max-w-xl my-10"
+  >
+    {{block "content" .}}{{end}} {{block "message" .}}{{end}} {{block "popup"
+    .}}{{end}}
+  </body>
+</html>

@@ -1,0 +1,21 @@
+CREATE TABLE users (
+id UUID PRIMARY KEY,
+email TEXT NOT NULL,
+password TEXT NOT NULL,
+name TEXT NOT NULL
+);
+
+CREATE TABLE sessions (
+token UUID PRIMARY KEY,
+email TEXT NOT NULL,
+expiry  TIMESTAMP NOT NULL
+);
+
+CREATE TABLE todos (
+    id UUID PRIMARY KEY,
+    title TEXT NOT NULL,
+    description TEXT,
+    complete BOOLEAN NOT NULL,
+    user_id UUID NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    due TIMESTAMP NOT NULL
+);
