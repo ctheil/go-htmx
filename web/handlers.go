@@ -150,14 +150,13 @@ func (h *Handler) CreateTodo() http.HandlerFunc {
 
 func (h *Handler) TodosList() http.HandlerFunc {
 
-	fmt.Println("TODOS!")
-
 	return func(w http.ResponseWriter, r *http.Request) {
 		uidStr := r.Context().Value("user").(string)
 		uid := uuid.MustParse(uidStr)
 		u, err := h.store.GetUserById(uid)
 		if err != nil {
 			fmt.Println("no user")
+			// BETTER HANDLING
 		}
 
 		tt, err := h.store.GetTodos(u.ID)
@@ -171,7 +170,6 @@ func (h *Handler) TodosList() http.HandlerFunc {
 			return
 		}
 
-		// return tt
 		tmpl, err := template.ParseFiles("templates/home.html")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)

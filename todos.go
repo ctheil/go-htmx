@@ -38,8 +38,10 @@ type SessionStore interface {
 	GetSession(sessionID uuid.UUID) (Session, error)
 }
 type TodoStore interface {
-	GetTodos(userId uuid.UUID) ([]Todo, error)
-	CreateTodo(t *Todo) error
+	GetTodos(userId uuid.UUID) ([]Todo, error) // GET
+	CreateTodo(t *Todo) error                  // should this return a todo? // POST
+	EditTodo(t *Todo) (Todo, error)            // HX-SWAP outterHTML // PUT
+	DeleteTodo(t *Todo) error                  // DELETE
 }
 
 type Store interface {

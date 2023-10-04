@@ -40,3 +40,10 @@ func (s *TodoStore) CreateTodo(t *todos.Todo) error {
 	// }
 	return nil
 }
+func (s *TodoStore) EditTodo(userId uuid.UUID) (todos.Todo, error) {
+
+	return todos.Todo{}, nil
+}
+func (s *TodoStore) DeleteTodo(userId uuid.UUID) error {
+	return nil
+}

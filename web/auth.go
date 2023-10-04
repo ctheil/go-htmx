@@ -81,8 +81,6 @@ func (h *Handler) PostLogin() http.HandlerFunc {
 			Expires: s.Expiry,
 		})
 
-		// set cookie
-
 		w.Header().Set("HX-Redirect", "/")
 		w.Header().Set("HX-Location", "/")
 		w.WriteHeader(http.StatusOK)
@@ -158,8 +156,6 @@ func (h *Handler) PostSignup() http.HandlerFunc {
 		}
 		w.Header().Set("HX-Redirect", "/login")
 		w.WriteHeader(http.StatusOK)
-
-		// http.Redirect(w, r, "/login", http.StatusSeeOther)
 
 	}
 
